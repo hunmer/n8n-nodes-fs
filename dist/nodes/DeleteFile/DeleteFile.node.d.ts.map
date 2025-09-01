@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteFile.node.d.ts","sourceRoot":"","sources":["../../../nodes/DeleteFile/DeleteFile.node.ts"],"names":[],"mappings":"AAAA,OAAO,EACH,iBAAiB,EACjB,kBAAkB,EAClB,SAAS,EACT,oBAAoB,EAIvB,MAAM,cAAc,CAAC;AAOtB,qBAAa,UAAW,YAAW,SAAS;IACxC,WAAW,EAAE,oBAAoB,CAoH/B;IAEI,OAAO,CAAC,IAAI,EAAE,iBAAiB,GAAG,OAAO,CAAC,kBAAkB,EAAE,EAAE,CAAC;IA+JvE,OAAO,CAAC,cAAc;CAMzB"}
