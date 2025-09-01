@@ -16,7 +16,7 @@
                 "filePath": "={{ $json.filePath }}",
                 "includeOptions": {}
             },
-            "type": "CUSTOM.fileInfo",
+            "type": "n8n-nodes-fs.fileInfo",
             "typeVersion": 1,
             "position": [
                 1024,
@@ -31,7 +31,7 @@
                 "filterOptions": {},
                 "outputOptions": {}
             },
-            "type": "CUSTOM.listFiles",
+            "type": "n8n-nodes-fs.listFiles",
             "typeVersion": 1,
             "position": [
                 2128,
@@ -45,7 +45,7 @@
                 "directoryPath": "={{ $json.test_dir }}",
                 "creationOptions": {}
             },
-            "type": "CUSTOM.createDirectory",
+            "type": "n8n-nodes-fs.createDirectory",
             "typeVersion": 1,
             "position": [
                 576,
@@ -60,7 +60,7 @@
                 "content": "hello,world!",
                 "additionalOptions": {}
             },
-            "type": "CUSTOM.writeFile",
+            "type": "n8n-nodes-fs.writeFile",
             "typeVersion": 1,
             "position": [
                 800,
@@ -75,7 +75,7 @@
                 "destinationPath": "={{ $json.directory }}\\new_file.txt",
                 "moveOptions": {}
             },
-            "type": "CUSTOM.moveFile",
+            "type": "n8n-nodes-fs.moveFile",
             "typeVersion": 1,
             "position": [
                 1248,
@@ -89,7 +89,7 @@
                 "filePath": "={{ $json.filePath }}",
                 "safetyOptions": {}
             },
-            "type": "CUSTOM.deleteFile",
+            "type": "n8n-nodes-fs.deleteFile",
             "typeVersion": 1,
             "position": [
                 1696,
@@ -103,7 +103,7 @@
                 "filePath": "={{ $json.destinationPath }}",
                 "additionalOptions": {}
             },
-            "type": "CUSTOM.readFile",
+            "type": "n8n-nodes-fs.readFile",
             "typeVersion": 1,
             "position": [
                 1472,
@@ -133,7 +133,7 @@
                 "checkOptions": {},
                 "outputOptions": {}
             },
-            "type": "CUSTOM.fileExists",
+            "type": "n8n-nodes-fs.fileExists",
             "typeVersion": 1,
             "position": [
                 1904,
