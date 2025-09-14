@@ -30,7 +30,7 @@ const fs_2 = require("fs");
 const path = __importStar(require("path"));
 const fileUtils_1 = require("../../utils/fileUtils");
 // Helper functions
-async function getFilesRecursively(dirPath, recursive, includeHidden, listMode, filterOptions) {
+async function getFilesRecursively(dirPath, recursive, includeHidden, listMode, filterOptions, includeStats = true) {
     const files = [];
     const items = await fs_1.promises.readdir(dirPath);
     for (const item of items) {
@@ -56,20 +56,23 @@ async function getFilesRecursively(dirPath, recursive, includeHidden, listMode, 
             path: fullPath,
             relativePath: path.relative(process.cwd(), fullPath),
             type: isDirectory ? 'directory' : 'file',
-            extension: isFile ? path.extname(item) : '',
-            size: stats.size,
-            sizeHuman: (0, fileUtils_1.formatFileSize)(stats.size),
-            created: stats.birthtime,
-            modified: stats.mtime,
-            accessed: stats.atime,
-            isFile,
-            isDirectory,
-            permissions: stats.mode,
         };
+        // Add file stats only if requested
+        if (includeStats) {
+            fileInfo.extension = isFile ? path.extname(item) : '';
+            fileInfo.size = stats.size;
+            fileInfo.sizeHuman = (0, fileUtils_1.formatFileSize)(stats.size);
+            fileInfo.created = stats.birthtime;
+            fileInfo.modified = stats.mtime;
+            fileInfo.accessed = stats.atime;
+            fileInfo.isFile = isFile;
+            fileInfo.isDirectory = isDirectory;
+            fileInfo.permissions = stats.mode;
+        }
         files.push(fileInfo);
         // Recurse into subdirectories if enabled
         if (recursive && isDirectory) {
-            const subFiles = await getFilesRecursively(fullPath, recursive, includeHidden, listMode, filterOptions);
+            const subFiles = await getFilesRecursively(fullPath, recursive, includeHidden, listMode, filterOptions, includeStats);
             files.push(...subFiles);
         }
     }
@@ -348,7 +351,8 @@ class ListFiles {
                     throw new n8n_workflow_1.NodeOperationError(this.getNode(), `Path is not a directory: ${absolutePath}`, { itemIndex: i });
                 }
                 // Get files
-                const files = await getFilesRecursively(absolutePath, recursive, includeHidden, listMode, filterOptions);
+                const files = await getFilesRecursively(absolutePath, recursive, includeHidden, listMode, filterOptions, outputOptions.includeStats !== false // 默认为true，除非明确设置为false
+                );
                 // Sort files if requested
                 const sortedFiles = sortFiles(files, outputOptions.sortBy || 'name', outputOptions.sortOrder || 'asc');
                 // Apply max files limit

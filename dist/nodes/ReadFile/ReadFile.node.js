@@ -142,6 +142,25 @@ class ReadFile {
                             description: 'Name of the property to store the file content',
                         },
                         {
+                            displayName: 'Include File Object',
+                            name: 'includeFileObject',
+                            type: 'boolean',
+                            default: false,
+                            description: 'Whether to include the complete file object with metadata',
+                        },
+                        {
+                            displayName: 'File Object Property Name',
+                            name: 'fileObjectPropertyName',
+                            type: 'string',
+                            default: 'fileObject',
+                            displayOptions: {
+                                show: {
+                                    includeFileObject: [true],
+                                },
+                            },
+                            description: 'Name of the property to store the complete file object',
+                        },
+                        {
                             displayName: 'Max File Size (MB)',
                             name: 'maxFileSize',
                             type: 'number',
@@ -164,6 +183,8 @@ class ReadFile {
                 const additionalOptions = this.getNodeParameter('additionalOptions', i, {});
                 const propertyName = additionalOptions.propertyName || 'content';
                 const includeStats = additionalOptions.includeStats || false;
+                const includeFileObject = additionalOptions.includeFileObject || false;
+                const fileObjectPropertyName = additionalOptions.fileObjectPropertyName || 'fileObject';
                 const maxFileSize = (additionalOptions.maxFileSize || 0) * 1024 * 1024; // Convert MB to bytes
                 // Validate file path
                 if (!filePath) {
@@ -228,6 +249,27 @@ class ReadFile {
                         mode: stats.mode,
                         uid: stats.uid,
                         gid: stats.gid,
+                    };
+                }
+                // Include complete file object if requested
+                if (includeFileObject) {
+                    returnItem[fileObjectPropertyName] = {
+                        name: path.basename(absolutePath),
+                        path: absolutePath,
+                        relativePath: path.relative(process.cwd(), absolutePath),
+                        type: 'file',
+                        extension: path.extname(absolutePath),
+                        content: content,
+                        size: stats.size,
+                        sizeHuman: formatFileSize(stats.size),
+                        created: stats.birthtime,
+                        modified: stats.mtime,
+                        accessed: stats.atime,
+                        isFile: true,
+                        isDirectory: false,
+                        permissions: stats.mode,
+                        readMode: readMode,
+                        encoding: readMode === 'text' ? encoding : undefined,
                     };
                 }
                 returnData.push({

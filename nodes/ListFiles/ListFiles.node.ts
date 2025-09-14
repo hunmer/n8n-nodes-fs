@@ -19,7 +19,8 @@ async function getFilesRecursively(
     recursive: boolean,
     includeHidden: boolean,
     listMode: string,
-    filterOptions: any
+    filterOptions: any,
+    includeStats: boolean = true
 ): Promise<any[]> {
     const files: any[] = [];
     const items = await fs.readdir(dirPath);
@@ -45,21 +46,25 @@ async function getFilesRecursively(
             continue;
         }
 
-        const fileInfo = {
+        const fileInfo: any = {
             name: item,
             path: fullPath,
             relativePath: path.relative(process.cwd(), fullPath),
             type: isDirectory ? 'directory' : 'file',
-            extension: isFile ? path.extname(item) : '',
-            size: stats.size,
-            sizeHuman: formatFileSize(stats.size),
-            created: stats.birthtime,
-            modified: stats.mtime,
-            accessed: stats.atime,
-            isFile,
-            isDirectory,
-            permissions: stats.mode,
         };
+
+        // Add file stats only if requested
+        if (includeStats) {
+            fileInfo.extension = isFile ? path.extname(item) : '';
+            fileInfo.size = stats.size;
+            fileInfo.sizeHuman = formatFileSize(stats.size);
+            fileInfo.created = stats.birthtime;
+            fileInfo.modified = stats.mtime;
+            fileInfo.accessed = stats.atime;
+            fileInfo.isFile = isFile;
+            fileInfo.isDirectory = isDirectory;
+            fileInfo.permissions = stats.mode;
+        }
 
         files.push(fileInfo);
 
@@ -70,7 +75,8 @@ async function getFilesRecursively(
                 recursive,
                 includeHidden,
                 listMode,
-                filterOptions
+                filterOptions,
+                includeStats
             );
             files.push(...subFiles);
         }
@@ -369,7 +375,8 @@ export class ListFiles implements INodeType {
                     recursive,
                     includeHidden,
                     listMode,
-                    filterOptions
+                    filterOptions,
+                    outputOptions.includeStats !== false // 默认为true，除非明确设置为false
                 );
 
                 // Sort files if requested
